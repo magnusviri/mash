@@ -1,0 +1,63 @@
+#!/usr/bin/env -S pkgx scriptisto
+
+// scriptisto-begin
+// script_src: main.m
+// build_cmd: clang main.m -framework ApplicationServices -framework Foundation -o ./script
+// scriptisto-end
+
+#import <stdio.h>
+#import <Foundation/Foundation.h>
+#import <ApplicationServices/ApplicationServices.h>
+
+void PostMouseEvent(CGMouseButton button, CGEventType type, const CGPoint point)
+{
+    CGEventRef theEvent = CGEventCreateMouseEvent(NULL, type, point, button);
+    CGEventSetType(theEvent, type);
+    CGEventPost(kCGHIDEventTap, theEvent);
+    CFRelease(theEvent);
+}
+
+void LeftClick(const CGPoint point)
+{
+    PostMouseEvent(kCGMouseButtonLeft, kCGEventMouseMoved, point);
+    PostMouseEvent(kCGMouseButtonLeft, kCGEventLeftMouseDown, point);
+    PostMouseEvent(kCGMouseButtonLeft, kCGEventLeftMouseUp, point);
+}
+
+int main(int argc, char *argv[]) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSUserDefaults *args = [NSUserDefaults standardUserDefaults];
+    CGPoint firstPoint;
+	int counter = 0;
+	int a = 0;
+	BOOL flag = YES;
+    CGEventRef ourEvent = CGEventCreate(NULL);
+    firstPoint = CGEventGetLocation(ourEvent);
+    CFRelease(ourEvent);
+    CGPoint currentPoint;
+	printf("Clicks will occur 100 pixels around this point: %.0f, %.0f\n", firstPoint.x, firstPoint.y);
+	printf("Press cntl-c to stop.\n");
+    while ( flag ) {
+        CGEventRef ourEvent = CGEventCreate(NULL);
+        currentPoint = CGEventGetLocation(ourEvent);
+        CFRelease(ourEvent);
+        if ( firstPoint.x + 100 > currentPoint.x &&
+            firstPoint.x - 100 < currentPoint.x &&
+            firstPoint.y + 100 > currentPoint.y &&
+            firstPoint.y - 100 < currentPoint.y
+        ) {
+			if ( counter > 100 ) {
+				printf("CLICK CLICK CLICK!\n");
+				counter = 0;
+			}
+			counter++;
+            LeftClick(currentPoint);
+        } else {
+            usleep(15000);
+        }
+        usleep(5000);
+    }
+
+    [pool release];
+    return 0;
+}
