@@ -21,6 +21,12 @@
 # https://gist.github.com/donatj/1353237
 # http://paulbourke.net/dataformats/asciiart/
 # https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+#
+# This script was designed using the macOS Terminal. It has not been tested on Linux or
+# Windows. If using this script with iTerm2 on macOS, you might want to go to Preferences,
+# Profiles, find your profile, Colors tab, set Minimum Contrast to 0.
+# 
+# https://stackoverflow.com/questions/76093466/detect-iterm2-terminal-over-a-ssh-session
 
 $ascii_width = 80;
 $html = false;
