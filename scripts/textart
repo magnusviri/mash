@@ -150,9 +150,9 @@ function enc_char($fg, $bg, $char) {
 		if ( $char == " " ) {
 			$char = "&nbsp;";
 		}
-		return "</span><span class=\"bk${bg} txt${fg}\">$char";
+		return "</span><span class=\"bk{$bg} txt{$fg}\">$char";
 	} else {
-		return "\033[38;5;${fg}m\033[48;5;${bg}m$char";
+		return "\033[38;5;{$fg}m\033[48;5;{$bg}m$char";
 	}
 }
 
@@ -298,22 +298,22 @@ function color_gradients() {
 function raw_colors() {
 	$image_text = "";
 	for ($color = 0; $color < 16; $color++) {
-		$image_text .= "\033[48;5;${color}m ";
+		$image_text .= "\033[48;5;{$color}m ";
 	}
 	$image_text .= enc_lf();
 	for ($color = 16; $color < 232; $color++) {
-		$image_text .= "\033[48;5;${color}m ";
+		$image_text .= "\033[48;5;{$color}m ";
 		if ( $color % 36 == 15 ) {
 			$image_text .= enc_lf();
 		}
 	}
 	$image_text .= enc_lf();
 	for ($color = 232; $color < 256; $color++) {
-		$image_text .= "\033[48;5;${color}m ";
+		$image_text .= "\033[48;5;{$color}m ";
 	}
 	$image_text .= enc_lf();
 	for ($color = 232; $color < 256; $color++) {
-		$image_text .= "\033[48;5;${color}m${color} ";
+		$image_text .= "\033[48;5;{$color}m{$color} ";
 	}
 	$image_text .= enc_lf();
 
