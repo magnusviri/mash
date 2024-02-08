@@ -85,9 +85,9 @@ function usage($message="") {
 
 function image_text($file, $ascii_width) {
 	global $font_y_scale;
-	$img = imagecreatefromstring(file_get_contents($file));
+	$img = @imagecreatefromstring(file_get_contents($file));
 	list($img_width, $img_height) = getimagesize($file);
-	$ascii_height = $ascii_width*$img_height/$img_width*$font_y_scale;
+	$ascii_height = intval( $ascii_width*$img_height/$img_width*$font_y_scale );
 	$x_scale = $img_width/$ascii_width;
 	$y_scale = $img_height/$ascii_height;
 // 	print "$img_width, $img_height $ascii_width,$ascii_height $x_scale,$y_scale \n";
@@ -121,7 +121,7 @@ function get_average_value($img, $x1, $x2, $y1, $y2) {
 	$count = 0;
 	for($yy = $y1; $yy < $y2; $yy++) {
 		for($xx = $x1; $xx < $x2; $xx++) {
-			list($r,$g,$b,$alpha) = pixel_color($img, $xx, $yy);
+			list($r,$g,$b,$alpha) = pixel_color($img, (int) $xx, (int) $yy);
 			$rr += $r;
 			$gg += $g;
 			$bb += $b;
@@ -136,7 +136,8 @@ function pixel_color($img, $xx, $yy) {
 	$r = (($rgb >> 16) & 255);
 	$g = (($rgb >> 8) & 255);
 	$b = ($rgb & 255);
-	$alpha = ($rgba & 0x7F000000) >> 24;
+
+	$alpha = ($rgb & 0x7F000000) >> 24;
 // 	var_dump($r, $g, $b, $alpha);
 // 	print "$rgb $r $g $b, $alpha";
 	return array($r/255, $g/255, $b/255, $alpha);
@@ -184,6 +185,9 @@ function what_to_print( $red, $green, $blue ) {
 		if ( $green < 0 ) { $green = 0; }
 		if ( $blue < 0 ) { $blue = 0; }
 		for ( $ii = 0; $ii < 1; $ii++ ) {
+		    $cyan = 0;
+		    $magenta = 0;
+		    $yellow = 0;
 			if ( $red > 1 ) {  $cyan = $red -1; $red = 1; }
 			if ( $green > 1 ) { $magenta = $green -1; $green = 1; }
 			if ( $blue > 1 ) { $yellow = $blue -1; $blue = 1; }
